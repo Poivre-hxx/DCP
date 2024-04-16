@@ -21,6 +21,7 @@ def quat2mat(quat):
     B = quat.size(0)
 
     w2, x2, y2, z2 = w.pow(2), x.pow(2), y.pow(2), z.pow(2)
+    w2, x2, y2, z2 = w.pow(2), x.pow(2), y.pow(2), z.pow(2)
     wx, wy, wz = w*x, w*y, w*z
     xy, xz, yz = x*y, x*z, y*z
 

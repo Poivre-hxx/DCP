@@ -14,9 +14,9 @@ from torch.utils.data import Dataset
 # Part of the code is referred from: https://github.com/charlesq34/pointnet
 
 def download():
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_DIR = os.path.join(BASE_DIR, 'data')
-    if not os.path.exists(DATA_DIR):
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # 获取当前文件的绝对路径
+    DATA_DIR = os.path.join(BASE_DIR, 'data') # 获取当前文件的绝对路径下的data文件夹
+    if not os.path.exists(DATA_DIR): # 若该文件夹不存在，则创建相应文件夹
         os.mkdir(DATA_DIR)
     if not os.path.exists(os.path.join(DATA_DIR, 'modelnet40_ply_hdf5_2048')):
         www = 'https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip'

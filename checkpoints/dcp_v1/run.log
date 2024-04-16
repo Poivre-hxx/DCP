@@ -1,0 +1,46 @@
+Namespace(batch_size=32, cycle=False, dataset='modelnet40', dropout=0.0, emb_dims=512, emb_nn='dgcnn', epochs=250, eval=False, exp_name='dcp_v1', factor=4, ff_dims=1024, gaussian_noise=False, head='svd', lr=0.001, model='dcp', model_path='', momentum=0.9, n_blocks=1, n_heads=4, no_cuda=False, num_points=1024, pointer='identity', seed=1234, test_batch_size=10, unseen=False, use_sgd=False)
+Namespace(batch_size=32, cycle=False, dataset='modelnet40', dropout=0.0, emb_dims=512, emb_nn='dgcnn', epochs=250, eval=False, exp_name='dcp_v1', factor=4, ff_dims=1024, gaussian_noise=False, head='svd', lr=0.001, model='dcp', model_path='', momentum=0.9, n_blocks=1, n_heads=4, no_cuda=False, num_points=1024, pointer='identity', seed=1234, test_batch_size=10, unseen=False, use_sgd=False)
+==TRAIN==
+A--------->B
+EPOCH:: 0, Loss: 0.021001, Cycle Loss:, 0.000000, MSE: 0.237475, RMSE: 0.487314, MAE: 0.380164, rot_MSE: 90.063667, rot_RMSE: 9.490188, rot_MAE: 6.762617, trans_MSE: 0.003964, trans_RMSE: 0.062962, trans_MAE: 0.048023
+B--------->A
+EPOCH:: 0, Loss: 0.021001, MSE: 0.237475, RMSE: 0.487314, MAE: 0.360267, rot_MSE: 90.063667, rot_RMSE: 9.490188, rot_MAE: 6.762617, trans_MSE: 0.009107, trans_RMSE: 0.095428, trans_MAE: 0.068934
+==TEST==
+A--------->B
+EPOCH:: 0, Loss: 0.012791, Cycle Loss: 0.000000, MSE: 0.239216, RMSE: 0.489097, MAE: 0.381146, rot_MSE: 53.017128, rot_RMSE: 7.281286, rot_MAE: 5.396369, trans_MSE: 0.002828, trans_RMSE: 0.053175, trans_MAE: 0.041309
+B--------->A
+EPOCH:: 0, Loss: 0.012791, MSE: 0.239216, RMSE: 0.489097, MAE: 0.360558, rot_MSE: 53.017128, rot_RMSE: 7.281286, rot_MAE: 5.396369, trans_MSE: 0.005965, trans_RMSE: 0.077232, trans_MAE: 0.057710
+==BEST TEST==
+A--------->B
+EPOCH:: 0, Loss: 0.012791, Cycle Loss: 0.000000, MSE: 0.239216, RMSE: 0.489097, MAE: 0.381146, rot_MSE: 53.017128, rot_RMSE: 7.281286, rot_MAE: 5.396369, trans_MSE: 0.002828, trans_RMSE: 0.053175, trans_MAE: 0.041309
+B--------->A
+EPOCH:: 0, Loss: 0.012791, MSE: 0.239216, RMSE: 0.489097, MAE: 0.360558, rot_MSE: 53.017128, rot_RMSE: 7.281286, rot_MAE: 5.396369, trans_MSE: 0.005965, trans_RMSE: 0.077232, trans_MAE: 0.057710
+==TRAIN==
+A--------->B
+EPOCH:: 1, Loss: 0.010720, Cycle Loss:, 0.000000, MSE: 0.235752, RMSE: 0.485543, MAE: 0.378552, rot_MSE: 44.964840, rot_RMSE: 6.705583, rot_MAE: 4.918760, trans_MSE: 0.002236, trans_RMSE: 0.047290, trans_MAE: 0.036329
+B--------->A
+EPOCH:: 1, Loss: 0.010720, MSE: 0.235752, RMSE: 0.485543, MAE: 0.357492, rot_MSE: 44.964840, rot_RMSE: 6.705583, rot_MAE: 4.918760, trans_MSE: 0.004747, trans_RMSE: 0.068901, trans_MAE: 0.051024
+==TEST==
+A--------->B
+EPOCH:: 1, Loss: 0.010063, Cycle Loss: 0.000000, MSE: 0.238383, RMSE: 0.488245, MAE: 0.380192, rot_MSE: 42.298683, rot_RMSE: 6.503744, rot_MAE: 4.750838, trans_MSE: 0.001999, trans_RMSE: 0.044707, trans_MAE: 0.033911
+B--------->A
+EPOCH:: 1, Loss: 0.010063, MSE: 0.238383, RMSE: 0.488245, MAE: 0.359153, rot_MSE: 42.298683, rot_RMSE: 6.503744, rot_MAE: 4.750837, trans_MSE: 0.004269, trans_RMSE: 0.065340, trans_MAE: 0.047774
+==BEST TEST==
+A--------->B
+EPOCH:: 1, Loss: 0.010063, Cycle Loss: 0.000000, MSE: 0.238383, RMSE: 0.488245, MAE: 0.380192, rot_MSE: 42.298683, rot_RMSE: 6.503744, rot_MAE: 4.750838, trans_MSE: 0.001999, trans_RMSE: 0.044707, trans_MAE: 0.033911
+B--------->A
+EPOCH:: 1, Loss: 0.010063, MSE: 0.238383, RMSE: 0.488245, MAE: 0.359153, rot_MSE: 42.298683, rot_RMSE: 6.503744, rot_MAE: 4.750837, trans_MSE: 0.004269, trans_RMSE: 0.065340, trans_MAE: 0.047774
+Namespace(batch_size=32, cycle=False, dataset='modelnet40', dropout=0.0, emb_dims=512, emb_nn='dgcnn', epochs=250, eval=True, exp_name='dcp_v1', factor=4, ff_dims=1024, gaussian_noise=False, head='svd', lr=0.001, model='dcp', model_path='', momentum=0.9, n_blocks=1, n_heads=4, no_cuda=False, num_points=1024, pointer='identity', seed=1234, test_batch_size=10, unseen=False, use_sgd=False)
+==FINAL TEST==
+A--------->B
+EPOCH:: -1, Loss: 0.010063, Cycle Loss: 0.000000, MSE: 0.238383, RMSE: 0.488245, MAE: 0.380192, rot_MSE: 42.298683, rot_RMSE: 6.503744, rot_MAE: 4.750838, trans_MSE: 0.001999, trans_RMSE: 0.044707, trans_MAE: 0.033911
+B--------->A
+EPOCH:: -1, Loss: 0.010063, MSE: 0.238383, RMSE: 0.488245, MAE: 0.359153, rot_MSE: 42.298683, rot_RMSE: 6.503744, rot_MAE: 4.750837, trans_MSE: 0.004269, trans_RMSE: 0.065340, trans_MAE: 0.047774
+Namespace(batch_size=32, cycle=False, dataset='modelnet40', dropout=0.0, emb_dims=512, emb_nn='dgcnn', epochs=250, eval=True, exp_name='dcp_v1', factor=4, ff_dims=1024, gaussian_noise=False, head='svd', lr=0.001, model='dcp', model_path='D:\\HDU\\三维点云\\DCP\\pretrained', momentum=0.9, n_blocks=1, n_heads=4, no_cuda=False, num_points=1024, pointer='identity', seed=1234, test_batch_size=10, unseen=False, use_sgd=False)
+Namespace(batch_size=32, cycle=False, dataset='modelnet40', dropout=0.0, emb_dims=512, emb_nn='dgcnn', epochs=250, eval=True, exp_name='dcp_v1', factor=4, ff_dims=1024, gaussian_noise=False, head='svd', lr=0.001, model='dcp', model_path='D:\\HDU\\三维点云\\DCP\\pretrained', momentum=0.9, n_blocks=1, n_heads=4, no_cuda=False, num_points=1024, pointer='identity', seed=1234, test_batch_size=10, unseen=False, use_sgd=False)
+Namespace(batch_size=32, cycle=False, dataset='modelnet40', dropout=0.0, emb_dims=512, emb_nn='dgcnn', epochs=250, eval=True, exp_name='dcp_v1', factor=4, ff_dims=1024, gaussian_noise=False, head='svd', lr=0.001, model='dcp', model_path='./pretrained/dcp_v1.t7', momentum=0.9, n_blocks=1, n_heads=4, no_cuda=False, num_points=1024, pointer='identity', seed=1234, test_batch_size=10, unseen=False, use_sgd=False)
+==FINAL TEST==
+A--------->B
+EPOCH:: -1, Loss: 0.001411, Cycle Loss: 0.000000, MSE: 0.236371, RMSE: 0.486180, MAE: 0.378077, rot_MSE: 11.785016, rot_RMSE: 3.432931, rot_MAE: 1.513083, trans_MSE: 0.000001, trans_RMSE: 0.001206, trans_MAE: 0.000697
+B--------->A
+EPOCH:: -1, Loss: 0.001411, MSE: 0.236371, RMSE: 0.486180, MAE: 0.355923, rot_MSE: 11.785017, rot_RMSE: 3.432931, rot_MAE: 1.513083, trans_MSE: 0.000472, trans_RMSE: 0.021724, trans_MAE: 0.009400
