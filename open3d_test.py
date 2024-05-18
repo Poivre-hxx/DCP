@@ -171,15 +171,19 @@ if __name__ == "__main__":
     net = DCP(args).cuda()
     net.load_state_dict(torch.load( args.model_path), strict=False)
 
-
+    # 打开 HDF5 文件
     f = h5py.File('data/modelnet40_ply_hdf5_2048/ply_data_train2.h5','r')
+    # 读取文件中的数据集并将其转换为 numpy 数组
     data = f['data'][:].astype('float32')  # (2048, 2048, 3) <class 'numpy.ndarray'>
     f.close()
 
+    # 随机选择一个点云
     # index = np.random.randint(data.shape[0])
     index=0
 
+    # 提取指定索引的点云数据
     point1 = data[index,:,:]
+    # 变换点云数据
     _,point2,_,_,_,_ = transform_input(point1)
 
 

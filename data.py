@@ -27,7 +27,7 @@ def download():
 
 
 def load_data(partition):
-    download()
+    download() # 调用download()函数
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     DATA_DIR = os.path.join(BASE_DIR, 'data')
     all_data = []

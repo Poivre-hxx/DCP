@@ -41,52 +41,56 @@ def nearest_neighbor(src, dst):
 
 
 def knn(x, k):
+    # 计算点云x的点积
     inner = -2 * torch.matmul(x.transpose(2, 1).contiguous(), x)
+    # 计算平方和
     xx = torch.sum(x ** 2, dim=1, keepdim=True)
+    # 计算成对距离
     pairwise_distance = -xx - inner - xx.transpose(2, 1).contiguous()
 
+    # 使用topk函数获取最近的k个点
     idx = pairwise_distance.topk(k=k, dim=-1)[1]  # (batch_size, num_points, k)
     return idx
 
 
 def get_graph_feature(x, k=20):
-    # x = x.squeeze()
+    # 调用knn()，获取最近的k个点
     idx = knn(x, k=k)  # (batch_size, num_points, k)
+    # 获取输出数据的维度
     batch_size, num_points, _ = idx.size()
     device = torch.device('cuda')
 
+    # 创建一个基数索引，其形状为（batch_size, 1, 1），用于计算点云之间的距离
     idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1) * num_points
-
     idx = idx + idx_base
-
     idx = idx.view(-1)
 
+    # 获取输入数据的维度信息。将输入数据的维度进行转换：(batch_size, num_points, num_dims)  -> (batch_size*num_points, num_dims)
     _, num_dims, _ = x.size()
+    x = x.transpose(2, 1).contiguous()
 
-    x = x.transpose(2,
-                    1).contiguous()  # (batch_size, num_points, num_dims)  -> (batch_size*num_points, num_dims) #   batch_size * num_points * k + range(0, batch_size*num_points)
+    # 将输入数据展平后，选择最近的k个点
     feature = x.view(batch_size * num_points, -1)[idx, :]
     feature = feature.view(batch_size, num_points, k, num_dims)
+
+    # 扩展输入数据的维度，使其与feature的维度相同
     x = x.view(batch_size, num_points, 1, num_dims).repeat(1, 1, k, 1)
 
+    # 将feature和x进行拼接，并将feature的维度进行转换
     feature = torch.cat((feature, x), dim=3).permute(0, 3, 1, 2)
 
     return feature
 
 
 class EncoderDecoder(nn.Module):
-    """
-    A standard Encoder-Decoder architecture. Base for this and many
-    other models.
-    """
 
     def __init__(self, encoder, decoder, src_embed, tgt_embed, generator):
         super(EncoderDecoder, self).__init__()
-        self.encoder = encoder
-        self.decoder = decoder
-        self.src_embed = src_embed
-        self.tgt_embed = tgt_embed
-        self.generator = generator
+        self.encoder = encoder # 编码器，用于对源序列进行编码
+        self.decoder = decoder # 解码器，用于对目标序列进行解码
+        self.src_embed = src_embed # 源序列的嵌入
+        self.tgt_embed = tgt_embed # 目标序列的嵌入
+        self.generator = generator # 生成器，用于生成输出序列
 
     def forward(self, src, tgt, src_mask, tgt_mask):
         "Take in and process masked src and target sequences."
@@ -277,6 +281,7 @@ class PointNet(nn.Module):
 class DGCNN(nn.Module):
     def __init__(self, emb_dims=512):
         super(DGCNN, self).__init__()
+        # 定义五个卷积层`conv1`到`conv5`（每个卷积层的输出通道数分别为64、64、64、128和512）和对应的批归一化层`bn1`到`bn5`，用于提取点云特征
         self.conv1 = nn.Conv2d(6, 64, kernel_size=1, bias=False)
         self.conv2 = nn.Conv2d(64, 64, kernel_size=1, bias=False)
         self.conv3 = nn.Conv2d(64, 128, kernel_size=1, bias=False)
@@ -289,7 +294,9 @@ class DGCNN(nn.Module):
         self.bn5 = nn.BatchNorm2d(emb_dims)
 
     def forward(self, x):
+        # 获取输入数据的维度
         batch_size, num_dims, num_points = x.size()
+        # 对输入数据分别应用卷积层`conv1`到`conv5`，并使用批归一化层`bn1`到`bn5`对卷积结果进行归一化
         x = get_graph_feature(x)
         x = F.relu(self.bn1(self.conv1(x)))
         x1 = x.max(dim=-1, keepdim=True)[0]
@@ -303,6 +310,7 @@ class DGCNN(nn.Module):
         x = F.relu(self.bn4(self.conv4(x)))
         x4 = x.max(dim=-1, keepdim=True)[0]
 
+        # 将卷积结果`x1`、`x2`、`x3`和`x4`拼接在一起，并使用`bn5`和`conv5`对拼接结果进行处理
         x = torch.cat((x1, x2, x3, x4), dim=1)
 
         x = F.relu(self.bn5(self.conv5(x))).view(batch_size, -1, num_points)
@@ -353,9 +361,11 @@ class Transformer(nn.Module):
         self.dropout = args.dropout
         self.ff_dims = args.ff_dims
         self.n_heads = args.n_heads
-        c = copy.deepcopy
-        attn = MultiHeadedAttention(self.n_heads, self.emb_dims)
-        ff = PositionwiseFeedForward(self.emb_dims, self.ff_dims, self.dropout)
+
+        # 初始化组件
+        c = copy.deepcopy # 深拷贝方法，用于复制模型
+        attn = MultiHeadedAttention(self.n_heads, self.emb_dims) # 多头注意力机制
+        ff = PositionwiseFeedForward(self.emb_dims, self.ff_dims, self.dropout) # 位置前馈网络
         self.model = EncoderDecoder(Encoder(EncoderLayer(self.emb_dims, c(attn), c(ff), self.dropout), self.N),
                                     Decoder(DecoderLayer(self.emb_dims, c(attn), c(attn), c(ff), self.dropout), self.N),
                                     nn.Sequential(),
@@ -425,11 +435,12 @@ class SVDHead(nn.Module):
         return R, t.view(batch_size, 3)
 
 
-class DCP(nn.Module):
+# DCP的整体模块
+class DCP(nn.Module):   # args 是一个存放各种参数的命名空间
     def __init__(self, args):
         super(DCP, self).__init__()
-        self.emb_dims = args.emb_dims
-        self.cycle = args.cycle
+        self.emb_dims = args.emb_dims   # 欲抽象到的特征维度，默认为512
+        self.cycle = args.cycle   # 是否使用循环一致性，默认为False
         if args.emb_nn == 'pointnet':
             self.emb_nn = PointNet(emb_dims=self.emb_dims)
         elif args.emb_nn == 'dgcnn':
@@ -444,28 +455,34 @@ class DCP(nn.Module):
         else:
             raise Exception("Not implemented")
 
-        if args.head == 'mlp':
+        if args.head == 'mlp':  # 直接使用MLP预测旋转矩阵和平移向量
             self.head = MLPHead(args=args)
-        elif args.head == 'svd':
+        elif args.head == 'svd': # 使用可微的SVD分解预测旋转矩阵和平移向量
             self.head = SVDHead(args=args)
         else:
             raise Exception('Not implemented')
 
+    # 使用 forward 方法，执行前向传播
     def forward(self, *input):
+        # 从输入中提取源点云(`src`)和目标点云(`tgt`)
         src = input[0]
         tgt = input[1]
+        # 通过嵌入网络，将源点云和目标点云映射到特征空间
         src_embedding = self.emb_nn(src)
         tgt_embedding = self.emb_nn(tgt)
 
+        # 使用指针网络，将源点云和目标点云的特征进行交互
         src_embedding_p, tgt_embedding_p = self.pointer(src_embedding, tgt_embedding)
 
+        # 将原始嵌入与调整后的嵌入相加，得到最终的嵌入
         src_embedding = src_embedding + src_embedding_p
         tgt_embedding = tgt_embedding + tgt_embedding_p
 
+        # 使用头网络，预测旋转矩阵和平移向量
         rotation_ab, translation_ab = self.head(src_embedding, tgt_embedding, src, tgt)
+        # 如果使用循环一致性，那么再次使用头网络，预测逆向的旋转矩阵和平移向量
         if self.cycle:
             rotation_ba, translation_ba = self.head(tgt_embedding, src_embedding, tgt, src)
-
         else:
             rotation_ba = rotation_ab.transpose(2, 1).contiguous()
             translation_ba = -torch.matmul(rotation_ba, translation_ab.unsqueeze(2)).squeeze(2)
