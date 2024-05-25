@@ -1,0 +1,22 @@
+<RCC>
+  <qresource prefix="Icons">
+    <file>axis_x.png</file>
+    <file>axis_y.png</file>
+    <file>axis_z.png</file>
+    <file>ic_back.png</file>
+    <file>ic_close.png</file>
+    <file>ic_down.png</file>
+    <file>ic_front.png</file>
+    <file>ic_left.png</file>
+    <file>ic_open.png</file>
+    <file>ic_pride.ico</file>
+    <file>ic_quit.png</file>
+    <file>ic_read.png</file>
+    <file>ic_right.png</file>
+    <file>ic_save.png</file>
+    <file>ic_scan.png</file>
+    <file>ic_setting.png</file>
+    <file>ic_start.png</file>
+    <file>ic_up.png</file>
+  </qresource>
+</RCC>

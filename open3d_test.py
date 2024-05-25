@@ -109,6 +109,17 @@ def run_one_pointcloud(src,target,net):
     translation_ba_pred = translation_ba_pred.detach().cpu().numpy()
     
     return src_pred,target_pred,rotation_ab_pred, translation_ab_pred,rotation_ba_pred, translation_ba_pred
+
+def calculate_registration_error_percentage(src, target):
+    # Calculate the Euclidean distance between corresponding points
+    distances = np.linalg.norm(src - target, axis=1)
+    # Calculate the mean of these distances
+    mean_distance = np.mean(distances)
+    # Calculate the maximum possible distance (for a unit cube, this is sqrt(3))
+    max_possible_distance = np.sqrt(3)
+    # Calculate the error percentage
+    error_percentage = (mean_distance / max_possible_distance) * 100
+    return error_percentage
     
 if __name__ == "__main__":
 
@@ -186,20 +197,17 @@ if __name__ == "__main__":
     # 变换点云数据
     _,point2,_,_,_,_ = transform_input(point1)
 
-
-    # src1=o3d.io.read_point_cloud("/home/pride/3d_registration/dcp-master/0_modelnet_src.ply")
-    # point1=np.asarray(src1.points)
-    # print(point1)
-    # _, point2, _, _, _, _ = transform_input(point1)
-
     src,target = point1,point2
-
 
     ## run
     src_pred, target_pred,r_ab,t_ab,r_ba,t_ba, = run_one_pointcloud(src, target,net)
 
     print("#############  src -> target :\n", r_ab, t_ab)
     print("#############  src <- target :\n", r_ba, t_ba)
+
+    # Calculate registration error percentage
+    error_percentage = calculate_registration_error_percentage(src_pred, target)
+    print("average registration error: {:.2f}%".format(error_percentage))
 
     #np->open3d
     src_cloud = o3d.PointCloud()
